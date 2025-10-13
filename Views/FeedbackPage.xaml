@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Avalia_.Views.FeedbackPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Avalia_.ViewModels"
+             xmlns:sft="clr-namespace:Syncfusion.Maui.Toolkit;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BackgroundColor="White"
+             Title="Avalia+">
+
+    <ContentPage.Resources>
+
+        <LinearGradientBrush x:Key="PrimaryGreenGradient"
+                             StartPoint="0,0"
+                             EndPoint="1,0">
+            <!-- 0% → 50% → 100% -->
+            <GradientStop Color="#9EDC3E"
+                          Offset="0.0" />
+            <GradientStop Color="#73CC49"
+                          Offset="0.5" />
+            <GradientStop Color="#48BB53"
+                          Offset="1.0" />
+        </LinearGradientBrush>
+
+        <!-- (opcional) versão azul -->
+        <LinearGradientBrush x:Key="PrimaryBlueGradient"
+                             StartPoint="0,0"
+                             EndPoint="1,0">
+            <GradientStop Color="#0CC2E4"
+                          Offset="0.0" />
+            <GradientStop Color="#1292E5"
+                          Offset="0.5" />
+            <GradientStop Color="#045EEA"
+                          Offset="1.0" />
+        </LinearGradientBrush>
+
+        <x:Array x:Key="Nomes"
+                 Type="{x:Type x:String}">
+            <x:String>Letícia</x:String>
+            <x:String>Paulo</x:String>
+            <x:String>Marina</x:String>
+        </x:Array>
+
+        <Style TargetType="Border"
+               x:Key="Card">
+            <Setter Property="StrokeThickness"
+                    Value="0" />
+            <Setter Property="BackgroundColor"
+                    Value="{DynamicResource ContentPageBackgroundColor}" />
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <RoundRectangle CornerRadius="24" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Brush="#00000033"
+                            Radius="12"
+                            Opacity="0.3"
+                            Offset="0,6" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Padding"
+                    Value="20" />
+        </Style>
+
+        <Style TargetType="Label"
+               x:Key="H1">
+            <Setter Property="FontSize"
+                    Value="22" />
+            <Setter Property="FontAttributes"
+                    Value="Bold" />
+            <Setter Property="TextColor"
+                    Value="{DynamicResource TextColor}" />
+        </Style>
+
+        <Style TargetType="Button"
+               x:Key="Primary">
+            <Setter Property="CornerRadius"
+                    Value="16" />
+            <Setter Property="HeightRequest"
+                    Value="54" />
+            <Setter Property="FontAttributes"
+                    Value="Bold" />
+            <Setter Property="TextColor"
+                    Value="White" />
+            <Setter Property="BackgroundColor"
+                    Value="#FF3B30" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid Padding="24">
+            <Border Style="{StaticResource Card}">
+                <Grid RowDefinitions="Auto,16,Auto,12,Auto,16,Auto,12,Auto,Auto,Auto">
+
+                    <!-- Título -->
+                    <Label Grid.Row="0"
+                           Style="{StaticResource H1}"
+                           Text="Como foi o seu atendimento hoje?" />
+
+                    <!-- Quem te atendeu -->
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="Auto,12,*"
+                          VerticalOptions="Center">
+
+                        <Image WidthRequest="44"
+                               HeightRequest="44"
+                               Aspect="AspectFill"
+                               Source="{Binding SelectedAttendant.PhotoUrl}">
+                            <Image.Clip>
+                                <EllipseGeometry Center="22,22"
+                                                 RadiusX="22"
+                                                 RadiusY="22" />
+                            </Image.Clip>
+                        </Image>
+
+                        <VerticalStackLayout Grid.Column="2"
+                                             Spacing="4"
+                                             VerticalOptions="Center">
+
+                            <Label Text="Quem te atendeu?"
+                                   FontSize="14"
+                                   TextColor="#6B7280"
+                                   Margin="0,0,0,4" />
+
+                            <Border Stroke="#C5C3C3"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="White"
+                                    Padding="8,4">
+
+                                <!-- Grid para sobrepor a seta -->
+                                <Grid ColumnDefinitions="*,Auto"
+                                      VerticalOptions="Center">
+                                    <!-- Picker 'limpo' para não brigar com temas -->
+                                    <Picker Title="Selecione"
+                                            Visual="Default"
+                                            BackgroundColor="Transparent"
+                                            FontAttributes="Bold"
+                                            TextColor="#111827"
+                                            ItemsSource="{Binding Attendants}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedAttendant}"
+                                            HorizontalOptions="FillAndExpand"
+                                            Margin="0" />
+
+                                    <!-- Seta custom sempre visível (não intercepta o toque) -->
+                                    <Image Grid.Column="1"
+                                           Source="chevron.png"
+                                           WidthRequest="20"
+                                           HeightRequest="20"
+                                           Opacity="0.7"
+                                           Margin="8,0,4,0"
+                                           VerticalOptions="Center"
+                                           InputTransparent="True" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+    
+
+                    </Grid>
+
+                    <!-- Avaliação do atendente -->
+                    <Label Grid.Row="4"
+                           Text="{Binding SelectedAttendant.Name, StringFormat='Como você avalia o atendimento de {0}?'}"
+                           TextColor="#6B7280" />
+
+                    <!-- RatingView (CommunityToolkit) -->
+                    <toolkit:RatingView Grid.Row="6"
+                                        MaximumRating="5"
+                                        Rating="{Binding AttendantScore}"
+                                        ShapeDiameter="36"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                    <!-- Avaliação da instituição -->
+                    <Label Grid.Row="8"
+                           Text="E como você avalia a nossa instituição de ensino?"
+                           TextColor="#6B7280" />
+
+                    <toolkit:RatingView Grid.Row="9"
+                                        MaximumRating="5"
+                                        Rating="{Binding InstitutionScore}"
+                                        ShapeDiameter="36"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center" />
+
+                    <!-- Comentário -->
+                    <VerticalStackLayout Grid.Row="10" Margin="0,30"
+                                         Spacing="8">
+                        <Label Text="Quer deixar algum comentário?"                             
+                               TextColor="#6B7280" />
+                        <Border Stroke="#C5C3C3"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="White"
+                                Padding="8,4">
+
+                            <Editor Placeholder="Escreva aqui..."
+                                    MaxLength="300"
+                                    HeightRequest="200"
+                                    AutoSize="TextChanges"
+                                    Text="{Binding Comment}" />
+                        </Border>
+
+
+                        <Button Text="Confirmar"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                CornerRadius="18"
+                                Padding="18,14"
+                                Background="{StaticResource PrimaryGreenGradient}"
+                                Command="{Binding ConfirmCommand}">
+                            <!-- estados (pressionado/desabilitado) -->
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <!-- leve escurecida ao pressionar -->
+                                            <Setter Property="Opacity"
+                                                    Value="0.9" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Property="Opacity"
+                                                    Value="0.6" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollView>
+
+
+</ContentPage>
