@@ -30,6 +30,8 @@ namespace Avalia_.ViewModels
 
         [ObservableProperty] private string? comment;
 
+        [ObservableProperty] private bool isSubmitting;
+
 
 
         public FeedbackViewModel()
@@ -51,58 +53,36 @@ namespace Avalia_.ViewModels
         }
 
 
-
         [RelayCommand]
-
         private async Task ConfirmAsync()
-
         {
-
-            // Simula envio do feedback
-
-            var payload = new
-
+            if (IsSubmitting) return;
+            IsSubmitting = true;
+            try
             {
+                // TODO: salvar / enviar
+                await Task.Delay(1500);
 
-                Attendant = SelectedAttendant?.Name,
 
-                AttendantScore,
-
-                InstitutionScore,
-
-                Comment,
-
-                CreatedAt = DateTimeOffset.Now
-
-            };
+                await Shell.Current.DisplayAlert("Obrigado!", "Sua avaliação foi registrada com sucesso.", "Fechar");
 
 
 
-            // Aqui você pode salvar localmente ou enviar via API
+                // Reseta campos
 
-            await Task.Delay(500);
+                AttendantScore = 0;
 
+                InstitutionScore = 0;
 
-
-            // Mostra feedback visual
-
-            await Shell.Current.DisplayAlert("Obrigado!", "Sua avaliação foi registrada com sucesso.", "Fechar");
-
-
-
-            // Reseta campos
-
-            AttendantScore = 0;
-
-            InstitutionScore = 0;
-
-            Comment = string.Empty;
-
+                Comment = string.Empty;
+            }
+            finally
+            {
+                IsSubmitting = false;
+            }
         }
 
     }
-
-
 
 }
 

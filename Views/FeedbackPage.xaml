@@ -105,14 +105,14 @@
                           ColumnDefinitions="Auto,12,*"
                           VerticalOptions="Center">
 
-                        <Image WidthRequest="44"
-                               HeightRequest="44"
+                        <Image WidthRequest="90"
+                               HeightRequest="90"
                                Aspect="AspectFill"
                                Source="{Binding SelectedAttendant.PhotoUrl}">
                             <Image.Clip>
-                                <EllipseGeometry Center="22,22"
-                                                 RadiusX="22"
-                                                 RadiusY="22" />
+                                <EllipseGeometry Center="42,42"
+                                                 RadiusX="42"
+                                                 RadiusY="42" />
                             </Image.Clip>
                         </Image>
 
@@ -158,8 +158,6 @@
                                 </Grid>
                             </Border>
                         </VerticalStackLayout>
-    
-
                     </Grid>
 
                     <!-- Avaliação do atendente -->
@@ -177,7 +175,7 @@
 
                     <!-- Avaliação da instituição -->
                     <Label Grid.Row="8"
-                           Text="E como você avalia a nossa instituição de ensino?"
+                           Text="E como você avalia a nossa instituição?"
                            TextColor="#6B7280" />
 
                     <toolkit:RatingView Grid.Row="9"
@@ -188,9 +186,10 @@
                                         VerticalOptions="Center" />
 
                     <!-- Comentário -->
-                    <VerticalStackLayout Grid.Row="10" Margin="0,30"
+                    <VerticalStackLayout Grid.Row="10"
+                                         Margin="0,30"
                                          Spacing="8">
-                        <Label Text="Quer deixar algum comentário?"                             
+                        <Label Text="Quer deixar algum comentário?"
                                TextColor="#6B7280" />
                         <Border Stroke="#C5C3C3"
                                 StrokeThickness="1"
@@ -206,33 +205,50 @@
                         </Border>
 
 
-                        <Button Text="Confirmar"
-                                FontAttributes="Bold"
-                                TextColor="White"
-                                CornerRadius="18"
-                                Padding="18,14"
-                                Background="{StaticResource PrimaryGreenGradient}"
-                                Command="{Binding ConfirmCommand}">
-                            <!-- estados (pressionado/desabilitado) -->
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="Pressed">
-                                        <VisualState.Setters>
-                                            <!-- leve escurecida ao pressionar -->
-                                            <Setter Property="Opacity"
-                                                    Value="0.9" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <VisualState.Setters>
-                                            <Setter Property="Opacity"
-                                                    Value="0.6" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Button>
+                        <!-- Host do botão: ocupa a largura da tela -->
+                        <Grid x:Name="ButtonHost"
+                              Padding="24,12"
+                              HorizontalOptions="Fill">
+
+                            <Border x:Name="ConfirmButton"
+                                    Background="{StaticResource PrimaryGreenGradient}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 24"
+                                    HeightRequest="54"
+                                    HorizontalOptions="Fill"
+                                    Padding="0">
+
+                                <Border.Shadow>
+                                    <Shadow Brush="#40000000"
+                                            Offset="0,8"
+                                            Radius="12" />
+                                </Border.Shadow>
+
+                                <Grid x:Name="BtnContent"
+                                      HorizontalOptions="Fill">
+                                    <Label x:Name="BtnText"
+                                           Text="Confirmar"
+                                           TextColor="White"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
+                                    <ActivityIndicator x:Name="BtnSpinner"
+                                                       Color="White"
+                                                       IsVisible="{Binding IsSubmitting}"
+                                                       IsRunning="{Binding IsSubmitting}"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       Opacity="0" />
+                                </Grid>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ConfirmCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+
 
                     </VerticalStackLayout>
                 </Grid>
