@@ -68,7 +68,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Helpers\" />
 	  <Folder Include="Config\" />
 	  <Folder Include="Repositories\" />
 	  <Folder Include="Services\" />
@@ -76,6 +75,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\FeedbackPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ObrigadoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

@@ -38,6 +38,7 @@ namespace Avalia_
             builder.Services.AddSingleton<AppShell>();
             builder.Services.AddSingleton<Views.FeedbackPage>();
             builder.Services.AddSingleton<ViewModels.FeedbackViewModel>();
+            builder.Services.AddTransient<Views.ObrigadoPage>();
 
             return builder.Build();
         }

@@ -14,6 +14,9 @@ namespace Avalia_
                 Content = feedbackPage,
                 Route = "Feedback"
             });
+
+
+            Routing.RegisterRoute(nameof(ObrigadoPage), typeof(ObrigadoPage));
         }
     }
 }

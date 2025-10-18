@@ -5,6 +5,16 @@
              x:Class="Avalia_.App">
     <Application.Resources>
         <ResourceDictionary>
+            <LinearGradientBrush x:Key="PrimaryGreenGradient"
+                                 StartPoint="0,0"
+                                 EndPoint="1,0">
+                <GradientStop Color="#9EDC3E"
+                              Offset="0.0" />
+                <GradientStop Color="#73CC49"
+                              Offset="0.5" />
+                <GradientStop Color="#48BB53"
+                              Offset="1.0" />
+            </LinearGradientBrush>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />

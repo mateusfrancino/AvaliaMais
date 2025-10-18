@@ -1,5 +1,9 @@
 using Avalia_.ViewModels;
 using Microsoft.Maui.Controls.Shapes;
+#if ANDROID
+using Android.Views;
+using Microsoft.Maui.Platform;
+#endif
 
 namespace Avalia_.Views;
 
@@ -9,35 +13,59 @@ public partial class FeedbackPage : ContentPage
     double _targetDiameter;
     bool _ready;
 
+#if ANDROID
+    StatusBarVisibility? _oldUi;
+#endif
+
+    private List<(Grid grid, Border overlay, Label label)> _emojis = default!;
+
     public FeedbackPage(FeedbackViewModel vm)
     {
         InitializeComponent();
         BindingContext = vm;
+
+        _emojis = new()
+    {
+        (gridEmoji0, overlayEmoji0, labelEmoji0),
+        (gridEmoji1, overlayEmoji1, labelEmoji1),
+        (gridEmoji2, overlayEmoji2, labelEmoji2),
+        (gridEmoji3, overlayEmoji3, labelEmoji3),
+        (gridEmoji4, overlayEmoji4, labelEmoji4),
+    };
+
+        // estado inicial: todos pequenos e "desabilitados"
+        ResetAll();
     }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
 
+#if ANDROID
+        var decor = Platform.CurrentActivity?.Window?.DecorView;
+        if (decor is not null)
+        {
+            _oldUi = decor.SystemUiVisibility;
+            decor.SystemUiVisibility = (StatusBarVisibility)(
+                SystemUiFlags.ImmersiveSticky |
+                SystemUiFlags.Fullscreen |
+                SystemUiFlags.HideNavigation);
+        }
+#endif
+
         // aguarda layout para ter medidas corretas do host
         Dispatcher.Dispatch(() =>
         {
-            // largura útil do host (= largura total - padding horizontal)
             var hostWidth = Math.Max(0,
                 ButtonHost.Width - (ButtonHost.Padding.Left + ButtonHost.Padding.Right));
 
-            // altura do botão já renderizada
             _targetDiameter = ConfirmButton.Height > 0 ? ConfirmButton.Height : 54;
-
-            // define a largura inicial (full-ish) com um mínimo confortável
             _startWidth = Math.Max(hostWidth, 280);
 
-            // fixa a largura inicial no Border e no conteúdo
             ConfirmButton.WidthRequest = _startWidth;
             BtnContent.WidthRequest = _startWidth;
 
-            // agora mudamos para Center para permitir encolher
             ConfirmButton.HorizontalOptions = LayoutOptions.Center;
-
             _ready = true;
         });
 
@@ -54,17 +82,25 @@ public partial class FeedbackPage : ContentPage
         }
     }
 
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+#if ANDROID
+        var decor = Platform.CurrentActivity?.Window?.DecorView;
+        if (decor is not null && _oldUi is not null)
+            decor.SystemUiVisibility = _oldUi.Value;
+#endif
+    }
+
     async Task AnimateToLoadingAsync()
     {
-        this.AbortAnimation("MorphBtn"); // evita colisão
+        this.AbortAnimation("MorphBtn");
 
-        // some o texto suavemente (escala + fade)
         await Task.WhenAll(
             BtnText.ScaleTo(0.96, 90, Easing.CubicOut),
             BtnText.FadeTo(0, 120, Easing.CubicOut)
         );
 
-        // mostra o spinner
         BtnSpinner.IsVisible = true;
         await BtnSpinner.FadeTo(1, 140, Easing.CubicOut);
 
@@ -91,7 +127,6 @@ public partial class FeedbackPage : ContentPage
             easing: Easing.SinInOut
         );
 
-        // esconde spinner e volta texto suavemente
         await BtnSpinner.FadeTo(0, 120, Easing.CubicIn);
         BtnSpinner.IsVisible = false;
 
@@ -128,19 +163,18 @@ public partial class FeedbackPage : ContentPage
             };
         }));
 
-        // sombra levemente mais forte ao encolher
+        // sombra
         anim.Add(0, 1, new Animation(v =>
         {
-            float shadowOpacity = (float)(0.25 + (0.40 - 0.25) * v); 
+            float shadowOpacity = (float)(0.25 + (0.40 - 0.25) * v);
             ConfirmButton.Shadow = new Shadow
             {
-                Brush = new SolidColorBrush(Colors.Black), // sem opacidade no Brush
-                Opacity = shadowOpacity,                    // opacidade é da Shadow
+                Brush = new SolidColorBrush(Colors.Black),
+                Opacity = shadowOpacity,
                 Offset = new Point(0, 8),
                 Radius = 12
             };
         }));
-
 
         anim.Commit(this, "MorphBtn", 16, duration, easing,
             finished: (v, c) => tcs.SetResult());
@@ -148,4 +182,32 @@ public partial class FeedbackPage : ContentPage
         return tcs.Task;
     }
 
+    private void ResetAll()
+    {
+        foreach (var (grid, overlay, label) in _emojis)
+        {
+            grid.WidthRequest = grid.HeightRequest = 100;
+            label.FontSize = 52;
+            overlay.IsVisible = true;          // mostra v�u cinza
+            overlay.InputTransparent = false;  // overlay captura o toque
+        }
+    }
+
+    private void SelectIndex(int index)
+    {
+        if (index < 0 || index >= _emojis.Count) return;
+        ResetAll();
+
+        var (grid, overlay, label) = _emojis[index];
+        grid.WidthRequest = grid.HeightRequest = 140;
+        label.FontSize = 82;
+        overlay.IsVisible = false;            // remove v�u do selecionado
+    }
+
+    private void OnEmojiTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is int i) { SelectIndex(i); return; }
+        if (e.Parameter is string s && int.TryParse(s, out var idx))
+            SelectIndex(idx);
+    }
 }

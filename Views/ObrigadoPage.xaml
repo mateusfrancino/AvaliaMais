@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Avalia_.Views.ObrigadoPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Shell.NavBarIsVisible="False"
+             Background="{StaticResource PrimaryGreenGradient}">
+
+    
+    <Grid Padding="24">
+        <VerticalStackLayout x:Name="ThankStack"
+                             Spacing="16"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Opacity="0">
+
+            <Image x:Name="ThankIcon"
+                   Source="like.png"
+                   WidthRequest="128"
+                   HeightRequest="128"              
+                   Opacity="0.95"
+                   AnchorX="0.5"
+                   AnchorY="0.5"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Obrigado!"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalTextAlignment="Center" />
+
+            <Label Text="Estamos sempre evoluindo para te atender melhor."
+                   FontSize="14"
+                   TextColor="#F0FFF0"
+                   Opacity="0.9"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
