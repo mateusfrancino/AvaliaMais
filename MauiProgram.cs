@@ -34,11 +34,14 @@ namespace Avalia_
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            // Registros de Views e ViewModels (boa prática MVVM)
+            // Views e VMs
             builder.Services.AddSingleton<AppShell>();
+
             builder.Services.AddSingleton<Views.FeedbackPage>();
             builder.Services.AddSingleton<ViewModels.FeedbackViewModel>();
+
             builder.Services.AddTransient<Views.ObrigadoPage>();
+
 
             return builder.Build();
         }

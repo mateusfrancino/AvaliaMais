@@ -8,6 +8,7 @@ namespace Avalia_
         {
             InitializeComponent();
 
+            // Item principal (Home)
             Items.Add(new ShellContent
             {
                 Title = "Home",
@@ -15,7 +16,9 @@ namespace Avalia_
                 Route = "Feedback"
             });
 
-
+            // Rotas "simples" (não-topo)
+            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            Routing.RegisterRoute(nameof(AdminPage), typeof(AdminPage));   // <-- só registrar
             Routing.RegisterRoute(nameof(ObrigadoPage), typeof(ObrigadoPage));
         }
     }

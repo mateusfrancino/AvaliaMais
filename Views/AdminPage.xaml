@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Avalia_.Views.AdminPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Avalia_.ViewModels"
+             x:DataType="vm:AdminViewModel"
+             xmlns:conv="clr-namespace:Avalia_.Helpers.Converters"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             Shell.NavBarIsVisible="False"
+             Title="">
+
+    <ContentPage.Resources>
+
+        <conv:IndexFilterConverter x:Key="IndexFilter" />
+
+        <Color x:Key="PageBg">#F3F4F6</Color>
+
+        <Style x:Key="Card"
+               TargetType="Border">
+            <Setter Property="BackgroundColor"
+                    Value="White" />
+            <Setter Property="StrokeThickness"
+                    Value="0" />
+            <Setter Property="StrokeShape"
+                    Value="RoundRectangle 16" />
+            <Setter Property="Padding"
+                    Value="16" />
+            <Setter Property="MinimumHeightRequest"
+                    Value="80" />
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Opacity="0.2"
+                            Radius="8"
+                            Brush="#33000000" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ResourceDictionary>
+
+            <!-- Botão pill com borda azul (Hoje) -->
+            <Style x:Key="PillButtonOutlinePrimary"
+                   TargetType="Button">
+                <Setter Property="HeightRequest"
+                        Value="40" />
+                <Setter Property="Padding"
+                        Value="18,0" />
+                <Setter Property="BackgroundColor"
+                        Value="Transparent" />
+                <Setter Property="TextColor"
+                        Value="#0786D6" />
+                <Setter Property="BorderColor"
+                        Value="#0786D6" />
+                <Setter Property="BorderWidth"
+                        Value="1.5" />
+                <Setter Property="CornerRadius"
+                        Value="22" />
+                <Setter Property="FontAttributes"
+                        Value="Bold" />
+            </Style>
+
+            <!-- Botão pill vermelho (Exportar) -->
+            <Style x:Key="PillButtonDanger"
+                   TargetType="Button">
+                <Setter Property="HeightRequest"
+                        Value="40" />
+                <Setter Property="Padding"
+                        Value="18,0" />
+                <Setter Property="BackgroundColor"
+                        Value="#E53935" />
+                <Setter Property="TextColor"
+                        Value="White" />
+                <Setter Property="CornerRadius"
+                        Value="22" />
+                <Setter Property="FontAttributes"
+                        Value="Bold" />
+            </Style>
+
+            <!-- Container pill para Picker -->
+            <Style x:Key="PillPickerBorder"
+                   TargetType="Border">
+                <Setter Property="Stroke"
+                        Value="#D0E7F6" />
+                <Setter Property="StrokeThickness"
+                        Value="1.5" />
+                <Setter Property="Background"
+                        Value="#F7FBFF" />
+                <Setter Property="StrokeShape"
+                        Value="RoundRectangle 22" />
+                <Setter Property="Padding"
+                        Value="10,0" />
+                <Setter Property="HeightRequest"
+                        Value="40" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout BackgroundColor="{StaticResource PageBg}">
+
+            <!-- 1) FAIXA DO TOPO -->
+            <Border Style="{StaticResource Card}"
+                    HeightRequest="80"
+                    Padding="16,0">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- TÍTULO ESQUERDA -->
+                    <Label Text="Visão Geral"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#111"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start" />
+
+                    <!-- FILTROS À DIREITA -->
+                    <HorizontalStackLayout Grid.Column="1"
+                                           Spacing="10"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="End">
+
+                        <!-- Botão HOJE -->
+                        <Button Text="Hoje"
+                                Style="{StaticResource PillButtonOutlinePrimary}"
+                                Command="{Binding FiltrarHojeCommand}" />
+
+                        <!-- Picker UNIDADE (pill) -->
+                        <Border Style="{StaticResource PillPickerBorder}">
+                            <Picker Title="Unidade"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    ItemsSource="{Binding Unidades}"
+                                    ItemDisplayBinding="{Binding Nome}"
+                                    SelectedItem="{Binding UnidadeSelecionada}" />
+                        </Border>
+
+                        <!-- Picker FUNCIONÁRIO (pill) -->
+                        <Border Style="{StaticResource PillPickerBorder}">
+                            <Picker Title="Funcionário"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    ItemsSource="{Binding Funcionarios}"
+                                    ItemDisplayBinding="{Binding Nome}"
+                                    SelectedItem="{Binding FuncionarioSelecionado}" />
+                        </Border>
+
+                        <!-- Botão EXPORTAR -->
+                        <Button Text="Exportar"
+                                Style="{StaticResource PillButtonDanger}"
+                                Command="{Binding ExportarCommand}" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <!--demais compomentes-->
+            <Grid>
+                <ScrollView>
+                    <Grid HorizontalOptions="Fill"
+                          VerticalOptions="Fill"
+                          Padding="20"
+                          RowSpacing="30">
+
+                        <Grid.RowDefinitions>
+                            <!-- faixa topo -->
+                            <RowDefinition Height="Auto" />
+                            <!-- 4 cards -->
+                            <RowDefinition Height="Auto" />
+                            <!-- 2 gráficos -->
+                            <RowDefinition Height="Auto" />
+                            <!-- últimas avaliações -->
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0"
+                              ColumnSpacing="16"
+                              HeightRequest="120"
+                              RowSpacing="16"
+                              Padding="8,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- CARD 1 - CSAT -->
+                            <Border Style="{StaticResource Card}"
+                                    Grid.Column="0">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Spacing="4">
+                                    <Label Text="C54"
+                                           FontSize="32"
+                                           FontAttributes="Bold"
+                                           TextColor="#111"
+                                           HorizontalOptions="Center" />
+
+                                    <HorizontalStackLayout Spacing="4"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center">
+                                        <Label Text="CSAT"
+                                               FontSize="14"
+                                               TextColor="#666" />
+                                        <Label Text="↑"
+                                               FontSize="14"
+                                               TextColor="#16A34A"
+                                               FontAttributes="Bold" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- CARD 2 - NPS -->
+                            <Border Style="{StaticResource Card}"
+                                    Grid.Column="1">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Spacing="4">
+                                    <Label Text="25"
+                                           FontSize="32"
+                                           FontAttributes="Bold"
+                                           TextColor="#111" />
+                                    <Label Text="NPS"
+                                           FontSize="14"
+                                           TextColor="#666" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- CARD 3 - Respostas -->
+                            <Border Style="{StaticResource Card}"
+                                    Grid.Column="2">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Spacing="4">
+                                    <Label Text="314"
+                                           FontSize="32"
+                                           FontAttributes="Bold"
+                                           TextColor="#111" />
+                                    <Label Text="Respostas"
+                                           FontSize="14"
+                                           TextColor="#666" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- CARD 4 - Detratores -->
+                            <Border Style="{StaticResource Card}"
+                                    Grid.Column="3">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                                     HorizontalOptions="Center"
+                                                     Spacing="4">
+                                    <Label Text="6%"
+                                           FontSize="32"
+                                           FontAttributes="Bold"
+                                           TextColor="#D32F2F" />
+                                    <Label Text="Detratores"
+                                           FontSize="14"
+                                           TextColor="#D32F2F" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+
+                        <!-- 3) Dois quadros (gráficos) em 2 colunas fixas -->
+                        <Grid Grid.Row="1"
+                              ColumnSpacing="16"
+                              RowSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- CARD 1: Avaliações por Unidade (CSAT por unidade) -->
+                            <Border Style="{StaticResource Card}"
+                                    Grid.Column="0"
+                                    HeightRequest="350"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="CSAT por Unidade"
+                                           FontAttributes="Bold"
+                                           FontSize="18"
+                                           TextColor="#111" />
+
+                                    <sf:SfCartesianChart>
+                                        <sf:SfCartesianChart.TooltipBehavior>
+                                            <sf:ChartTooltipBehavior />
+                                        </sf:SfCartesianChart.TooltipBehavior>
+
+                                        <sf:SfCartesianChart.XAxes>
+                                            <sf:CategoryAxis ShowMajorGridLines="False"
+                                                             EdgeLabelsDrawingMode="Center"
+                                                             LabelPlacement="BetweenTicks"
+                                                             LabelRotation="-10" />
+                                        </sf:SfCartesianChart.XAxes>
+
+                                        <sf:SfCartesianChart.YAxes>
+                                            <sf:NumericalAxis Minimum="0"
+                                                              Maximum="100"
+                                                              Interval="20"
+                                                              ShowMajorGridLines="True" />
+                                        </sf:SfCartesianChart.YAxes>
+
+                                        <!-- CARD 1: CSAT por Unidade -->
+                                        <sf:ColumnSeries ItemsSource="{Binding CsatPorUnidade}"
+                                                         XBindingPath="Nome"
+                                                         YBindingPath="Csat"
+                                                         ShowDataLabels="True"
+                                                         EnableTooltip="True">
+                                            <sf:ColumnSeries.CornerRadius>
+                                                <CornerRadius>10</CornerRadius>
+                                            </sf:ColumnSeries.CornerRadius>
+                                        </sf:ColumnSeries>
+
+                                    </sf:SfCartesianChart>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- CARD 2: Distribuição por emoji (da unidade filtrada) -->
+                            <Border Style="{StaticResource Card}"
+                                    Grid.Column="1"
+                                    HeightRequest="350"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="Distribuição por emoji"
+                                           FontAttributes="Bold"
+                                           FontSize="18"
+                                           TextColor="#111" />
+
+                                    <sf:SfCartesianChart>
+                                        <sf:SfCartesianChart.TooltipBehavior>
+                                            <sf:ChartTooltipBehavior />
+                                        </sf:SfCartesianChart.TooltipBehavior>
+
+                                        <!-- Eixo X: os próprios emojis vindos do XBindingPath -->
+                                        <sf:SfCartesianChart.XAxes>
+                                            <sf:CategoryAxis ShowMajorGridLines="False"
+                                                             LabelPlacement="OnTicks"
+                                                             Interval="2"
+                                                             EdgeLabelsDrawingMode="Center">
+                                                <sf:CategoryAxis.LabelStyle>
+                                                    <sf:ChartAxisLabelStyle FontSize="28" />
+                                                </sf:CategoryAxis.LabelStyle>
+                                            </sf:CategoryAxis>
+                                        </sf:SfCartesianChart.XAxes>
+                                        <sf:SfCartesianChart.YAxes>
+                                            <sf:NumericalAxis Minimum="0"
+                                                              Interval="5"
+                                                              ShowMajorGridLines="True" />
+                                        </sf:SfCartesianChart.YAxes>
+                                        <!-- 😡 vermelho -->
+                                        <sf:ColumnSeries ItemsSource="{Binding DistribEmoji, Converter={StaticResource IndexFilter}, ConverterParameter=0}"
+                                                         XBindingPath="Emoji"
+                                                         YBindingPath="Quantidade"
+                                                         Fill="#EF4444"
+                                                         ShowDataLabels="True"
+                                                         EnableTooltip="True"
+                                                         Spacing="0.1">
+                                            <sf:ColumnSeries.CornerRadius>
+                                                <CornerRadius>18</CornerRadius>
+                                            </sf:ColumnSeries.CornerRadius>
+                                        </sf:ColumnSeries>
+
+                                        <!-- 😟 laranja -->
+                                        <sf:ColumnSeries ItemsSource="{Binding DistribEmoji, Converter={StaticResource IndexFilter}, ConverterParameter=1}"
+                                                         XBindingPath="Emoji"
+                                                         YBindingPath="Quantidade"
+                                                         Fill="#F59E0B"
+                                                         ShowDataLabels="True"
+                                                         EnableTooltip="True"
+                                                         Spacing="0.1">
+                                            <sf:ColumnSeries.CornerRadius>
+                                                <CornerRadius>18</CornerRadius>
+                                            </sf:ColumnSeries.CornerRadius>
+                                        </sf:ColumnSeries>
+
+                                        <!-- 🙂 amarelo -->
+                                        <sf:ColumnSeries ItemsSource="{Binding DistribEmoji, Converter={StaticResource IndexFilter}, ConverterParameter=2}"
+                                                         XBindingPath="Emoji"
+                                                         YBindingPath="Quantidade"
+                                                         Fill="#FACC15"
+                                                         ShowDataLabels="True"
+                                                         EnableTooltip="True"
+                                                         Spacing="0.1">
+                                            <sf:ColumnSeries.CornerRadius>
+                                                <CornerRadius>18</CornerRadius>
+                                            </sf:ColumnSeries.CornerRadius>
+                                        </sf:ColumnSeries>
+
+                                        <!-- 😊 verde claro -->
+                                        <sf:ColumnSeries ItemsSource="{Binding DistribEmoji, Converter={StaticResource IndexFilter}, ConverterParameter=3}"
+                                                         XBindingPath="Emoji"
+                                                         YBindingPath="Quantidade"
+                                                         Fill="#86EFAC"
+                                                         ShowDataLabels="True"
+                                                         EnableTooltip="True"
+                                                         Spacing="0.1">
+                                            <sf:ColumnSeries.CornerRadius>
+                                                <CornerRadius>18</CornerRadius>
+                                            </sf:ColumnSeries.CornerRadius>
+                                        </sf:ColumnSeries>
+
+                                        <!-- 😁 verde escuro -->
+                                        <sf:ColumnSeries ItemsSource="{Binding DistribEmoji, Converter={StaticResource IndexFilter}, ConverterParameter=4}"
+                                                         XBindingPath="Emoji"
+                                                         YBindingPath="Quantidade"
+                                                         Fill="#15803D"
+                                                         ShowDataLabels="True"
+                                                         EnableTooltip="True"
+                                                         Spacing="0.1">
+                                            <sf:ColumnSeries.CornerRadius>
+                                                <CornerRadius>18</CornerRadius>
+                                            </sf:ColumnSeries.CornerRadius>
+                                        </sf:ColumnSeries>
+
+                                    </sf:SfCartesianChart>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+
+                        <!-- 4) Últimas avaliações (largura total) -->
+                        <Border Grid.Row="2"
+                                Style="{StaticResource Card}"
+                                HeightRequest="460" />
+                    </Grid>
+                </ScrollView>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

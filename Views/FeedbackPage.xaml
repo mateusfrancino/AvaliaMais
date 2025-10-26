@@ -95,382 +95,331 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="*,Auto,*">
+    <ScrollView>
 
-        <!-- Título -->
-        <Label Grid.Row="0"
-               Style="{StaticResource H1}"
-               Text="Como foi o seu atendimento hoje?"
-               Margin="0,0,0,0"
-               HorizontalOptions="Center"
-               VerticalOptions="End" />
+        <Grid RowDefinitions="Auto,Auto,Auto">
 
-        <!-- CONTEÚDO ROLÁVEL -->
-        <ScrollView Grid.Row="1">
-            <Grid Padding="16"
-                  HorizontalOptions="Fill"
-                  VerticalOptions="Start">
-                <Border Style="{StaticResource Card}"
-                        HorizontalOptions="Fill"
-                        Padding="20"
-                        MaximumWidthRequest="980">
-                    <Grid x:Name="ContentHost"
-                          RowSpacing="14"
-                          RowDefinitions="Auto,12,Auto,8,Auto,Auto,Auto,10,Auto,Auto,Auto">
+            <!-- Título -->
+            <Label Grid.Row="0"
+                   Style="{StaticResource H1}"
+                   Text="Como foi o seu atendimento hoje?"
+                   Margin="0,0,0,0"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="AdminTitle_Tapped" />
+                </Label.GestureRecognizers>
+            </Label>
 
-                        <!-- Quem te atendeu -->
-                        <Grid Grid.Row="2"
-                              ColumnDefinitions="Auto,12,*"
-                              VerticalOptions="Center">
 
-                            <Image WidthRequest="120"
-                                   HeightRequest="120"
-                                   Aspect="AspectFill"
-                                   Source="{Binding SelectedAttendant.PhotoUrl}">
-                                <Image.Clip>
-                                    <EllipseGeometry Center="55,55"
-                                                     RadiusX="55"
-                                                     RadiusY="55" />
-                                </Image.Clip>
-                            </Image>
+            <!-- CONTEÚDO ROLÁVEL -->
+            <ScrollView Grid.Row="1">
+                <Grid Padding="16"
+                      HorizontalOptions="Fill"
+                      VerticalOptions="Fill">
+                    <Border Style="{StaticResource Card}"
+                            HorizontalOptions="Fill"
+                            Padding="20"
+                            MaximumWidthRequest="980">
+                        <Grid x:Name="ContentHost"
+                              RowSpacing="14"
+                              RowDefinitions="Auto,12,Auto,8,Auto,Auto,Auto,10,Auto,Auto,Auto">
 
-                            <VerticalStackLayout Grid.Column="2"
-                                                 Spacing="4"
-                                                 VerticalOptions="Center">
+                            <!-- Quem te atendeu -->
+                            <Grid Grid.Row="2"
+                                  ColumnDefinitions="Auto,12,*"
+                                  VerticalOptions="Center">
 
-                                <Label Text="Quem te atendeu?"
-                                       FontSize="14"
-                                       TextColor="#6B7280"
-                                       Margin="0,0,0,4" />
+                                <Image WidthRequest="120"
+                                       HeightRequest="120"
+                                       Aspect="AspectFill"
+                                       Source="{Binding SelectedAttendant.PhotoUrl}">
+                                    <Image.Clip>
+                                        <EllipseGeometry Center="55,55"
+                                                         RadiusX="55"
+                                                         RadiusY="55" />
+                                    </Image.Clip>
+                                </Image>
 
+                                <VerticalStackLayout Grid.Column="2"
+                                                     Spacing="4"
+                                                     VerticalOptions="Center">
+
+                                    <Label Text="Quem te atendeu?"
+                                           FontSize="14"
+                                           TextColor="#6B7280"
+                                           Margin="0,0,0,4" />
+
+                                    <Border Stroke="#C5C3C3"
+                                            StrokeThickness="1"
+                                            StrokeShape="RoundRectangle 12"
+                                            BackgroundColor="White"
+                                            Padding="8,4">
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              VerticalOptions="Center">
+                                            <Picker Title="Selecione"
+                                                    Visual="Default"
+                                                    BackgroundColor="Transparent"
+                                                    FontAttributes="Bold"
+                                                    TextColor="#111827"
+                                                    ItemsSource="{Binding Attendants}"
+                                                    ItemDisplayBinding="{Binding Name}"
+                                                    SelectedItem="{Binding SelectedAttendant}"
+                                                    HorizontalOptions="FillAndExpand" />
+                                            <Image Grid.Column="1"
+                                                   Source="chevron.png"
+                                                   WidthRequest="20"
+                                                   HeightRequest="20"
+                                                   Opacity="0.7"
+                                                   Margin="8,0,4,0"
+                                                   VerticalOptions="Center"
+                                                   InputTransparent="True" />
+                                        </Grid>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Avaliação do atendente -->
+                            <Label Grid.Row="4"
+                                   Text="{Binding SelectedAttendant.Name, StringFormat='Como você avalia o atendimento de {0}?'}"
+                                   TextColor="#6B7280" />
+
+                            <Grid Grid.Row="5"
+                                  Padding="0"
+                                  ColumnSpacing="2"
+                                  RowSpacing="0">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <!-- Coluna 1 -->
+                                    <ColumnDefinition Width="*" />
+                                    <!-- Coluna 2 -->
+                                    <ColumnDefinition Width="*" />
+                                    <!-- Coluna 3 -->
+                                    <ColumnDefinition Width="*" />
+                                    <!-- Coluna 4 -->
+                                    <ColumnDefinition Width="*" />
+                                    <!-- Coluna 5 -->
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="120" />
+                                </Grid.RowDefinitions>
+
+                                <!-- COL 0 -->
+                                <Grid x:Name="gridEmoji0"
+                                      Grid.Column="0"
+                                      WidthRequest="80"
+                                      HeightRequest="80"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center">
+                                    <Border BackgroundColor="#FACC15"
+                                            StrokeShape="Ellipse">
+                                        <Label x:Name="labelEmoji0"
+                                               Text="😟"
+                                               FontSize="52"
+                                               Margin="0,0,0,8"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border x:Name="overlayEmoji0"
+                                            BackgroundColor="#80000000"
+                                            StrokeThickness="0"
+                                            StrokeShape="Ellipse">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEmojiTapped"
+                                                                  CommandParameter="0" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+
+                                <!-- COL 1 -->
+                                <Grid x:Name="gridEmoji1"
+                                      Grid.Column="1"
+                                      WidthRequest="80"
+                                      HeightRequest="80"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center">
+                                    <Border BackgroundColor="#FACC15"
+                                            StrokeShape="Ellipse">
+                                        <Label x:Name="labelEmoji1"
+                                               Text="😐"
+                                               FontSize="52"
+                                               Margin="0,0,0,8"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border x:Name="overlayEmoji1"
+                                            BackgroundColor="#80000000"
+                                            StrokeThickness="0"
+                                            StrokeShape="Ellipse">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEmojiTapped"
+                                                                  CommandParameter="1" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+
+                                <!-- COL 2 -->
+                                <Grid x:Name="gridEmoji2"
+                                      Grid.Column="2"
+                                      WidthRequest="80"
+                                      HeightRequest="80"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center">
+                                    <Border BackgroundColor="#FACC15"
+                                            StrokeShape="Ellipse">
+                                        <Label x:Name="labelEmoji2"
+                                               Text="🙂"
+                                               FontSize="52"
+                                               Margin="0,0,0,8"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border x:Name="overlayEmoji2"
+                                            BackgroundColor="#80000000"
+                                            StrokeThickness="0"
+                                            StrokeShape="Ellipse">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEmojiTapped"
+                                                                  CommandParameter="2" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+
+                                <!-- COL 3 -->
+                                <Grid x:Name="gridEmoji3"
+                                      Grid.Column="3"
+                                      WidthRequest="80"
+                                      HeightRequest="80"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center">
+                                    <Border BackgroundColor="#FACC15"
+                                            StrokeShape="Ellipse">
+                                        <Label x:Name="labelEmoji3"
+                                               Text="😊"
+                                               FontSize="52"
+                                               Margin="0,0,0,8"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border x:Name="overlayEmoji3"
+                                            BackgroundColor="#80000000"
+                                            StrokeThickness="0"
+                                            StrokeShape="Ellipse">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEmojiTapped"
+                                                                  CommandParameter="3" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+
+                                <!-- COL 4 -->
+                                <Grid x:Name="gridEmoji4"
+                                      Grid.Column="4"
+                                      WidthRequest="80"
+                                      HeightRequest="80"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center">
+                                    <Border BackgroundColor="#FACC15"
+                                            StrokeShape="Ellipse">
+                                        <Label x:Name="labelEmoji4"
+                                               Text="😁"
+                                               FontSize="52"
+                                               Margin="0,0,0,8"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border x:Name="overlayEmoji4"
+                                            BackgroundColor="#80000000"
+                                            StrokeThickness="0"
+                                            StrokeShape="Ellipse">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnEmojiTapped"
+                                                                  CommandParameter="4" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Label Grid.Row="8"
+                                   Text="E como você avalia a nossa instituição?"
+                                   TextColor="#6B7280" />
+
+                            <toolkit:RatingView Grid.Row="9"
+                                                x:Name="Stars"
+                                                MaximumRating="5"
+                                                Rating="{Binding InstitutionScore}"
+                                                ShapeDiameter="55"
+                                                FillColor="#FACC15"
+                                                BackgroundColor="Transparent"
+                                                HorizontalOptions="Center" />
+
+                            <!-- Comentário (altura responsiva) -->
+                            <VerticalStackLayout Grid.Row="10"
+                                                 Margin="0,40,0,0"
+                                                 Spacing="8">
+                                <Label Text="Quer deixar algum comentário?"
+                                       TextColor="#6B7280" />
                                 <Border Stroke="#C5C3C3"
                                         StrokeThickness="1"
                                         StrokeShape="RoundRectangle 12"
                                         BackgroundColor="White"
-                                        Padding="8,4">
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          VerticalOptions="Center">
-                                        <Picker Title="Selecione"
-                                                Visual="Default"
-                                                BackgroundColor="Transparent"
-                                                FontAttributes="Bold"
-                                                TextColor="#111827"
-                                                ItemsSource="{Binding Attendants}"
-                                                ItemDisplayBinding="{Binding Name}"
-                                                SelectedItem="{Binding SelectedAttendant}"
-                                                HorizontalOptions="FillAndExpand" />
-                                        <Image Grid.Column="1"
-                                               Source="chevron.png"
-                                               WidthRequest="20"
-                                               HeightRequest="20"
-                                               Opacity="0.7"
-                                               Margin="8,0,4,0"
-                                               VerticalOptions="Center"
-                                               InputTransparent="True" />
-                                    </Grid>
+                                        Padding="8,6">
+                                    <Editor x:Name="CommentEditor"
+                                            Placeholder="Escreva aqui..."
+                                            MaxLength="300"
+                                            AutoSize="Disabled"
+                                            Text="{Binding Comment}"
+                                            MinimumHeightRequest="300" />
                                 </Border>
                             </VerticalStackLayout>
                         </Grid>
+                    </Border>
+                </Grid>
+            </ScrollView>
 
-                        <!-- Avaliação do atendente -->
-                        <Label Grid.Row="4"
-                               Text="{Binding SelectedAttendant.Name, StringFormat='Como você avalia o atendimento de {0}?'}"
-                               TextColor="#6B7280" />
+            <!-- Botão fixo no rodapé -->
+            <Grid Grid.Row="2"
+                  x:Name="ButtonHost"
+                  Padding="24,12"
+                  HorizontalOptions="Fill">
+                <Border x:Name="ConfirmButton"
+                        Background="{StaticResource PrimaryGreenGradient}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 24"
+                        HeightRequest="54"
+                        HorizontalOptions="Fill"
+                        Padding="0">
+                    <Border.Shadow>
+                        <Shadow Brush="#40000000"
+                                Offset="0,8"
+                                Radius="12" />
+                    </Border.Shadow>
 
-                        <Grid Grid.Row="5"
-                              Padding="0"
-                              ColumnSpacing="2"
-                              RowSpacing="0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <!-- Coluna 1 -->
-                                <ColumnDefinition Width="*" />
-                                <!-- Coluna 2 -->
-                                <ColumnDefinition Width="*" />
-                                <!-- Coluna 3 -->
-                                <ColumnDefinition Width="*" />
-                                <!-- Coluna 4 -->
-                                <ColumnDefinition Width="*" />
-                                <!-- Coluna 5 -->
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="150" />
-                            </Grid.RowDefinitions>
-
-                            <!-- COL 0 -->
-                            <Grid x:Name="gridEmoji0"
-                                  Grid.Column="0"
-                                  WidthRequest="100"
-                                  HeightRequest="100"
-                                  HorizontalOptions="Center"
-                                  VerticalOptions="Center">
-                                <Border BackgroundColor="#FACC15"
-                                        StrokeShape="Ellipse">
-                                    <Label x:Name="labelEmoji0"
-                                           Text="😟"
-                                           FontSize="52"
-                                           Margin="0,0,0,8"
+                    <Grid x:Name="BtnContent"
+                          HorizontalOptions="Fill">
+                        <Label x:Name="BtnText"
+                               Text="Confirmar"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               FontSize="16"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                        <ActivityIndicator x:Name="BtnSpinner"
+                                           Color="White"
+                                           IsVisible="{Binding IsSubmitting}"
+                                           IsRunning="{Binding IsSubmitting}"
                                            HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-                                <Border x:Name="overlayEmoji0"
-                                        BackgroundColor="#80000000"
-                                        StrokeThickness="0"
-                                        StrokeShape="Ellipse">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEmojiTapped"
-                                                              CommandParameter="0" />
-                                    </Border.GestureRecognizers>
-                                </Border>
-                            </Grid>
-
-                            <!-- COL 1 -->
-                            <Grid x:Name="gridEmoji1"
-                                  Grid.Column="1"
-                                  WidthRequest="100"
-                                  HeightRequest="100"
-                                  HorizontalOptions="Center"
-                                  VerticalOptions="Center">
-                                <Border BackgroundColor="#FACC15"
-                                        StrokeShape="Ellipse">
-                                    <Label x:Name="labelEmoji1"
-                                           Text="😐"
-                                           FontSize="52"
-                                           Margin="0,0,0,8"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-                                <Border x:Name="overlayEmoji1"
-                                        BackgroundColor="#80000000"
-                                        StrokeThickness="0"
-                                        StrokeShape="Ellipse">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEmojiTapped"
-                                                              CommandParameter="1" />
-                                    </Border.GestureRecognizers>
-                                </Border>
-                            </Grid>
-
-                            <!-- COL 2 -->
-                            <Grid x:Name="gridEmoji2"
-                                  Grid.Column="2"
-                                  WidthRequest="100"
-                                  HeightRequest="100"
-                                  HorizontalOptions="Center"
-                                  VerticalOptions="Center">
-                                <Border BackgroundColor="#FACC15"
-                                        StrokeShape="Ellipse">
-                                    <Label x:Name="labelEmoji2"
-                                           Text="🙂"
-                                           FontSize="52"
-                                           Margin="0,0,0,8"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-                                <Border x:Name="overlayEmoji2"
-                                        BackgroundColor="#80000000"
-                                        StrokeThickness="0"
-                                        StrokeShape="Ellipse">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEmojiTapped"
-                                                              CommandParameter="2" />
-                                    </Border.GestureRecognizers>
-                                </Border>
-                            </Grid>
-
-                            <!-- COL 3 -->
-                            <Grid x:Name="gridEmoji3"
-                                  Grid.Column="3"
-                                  WidthRequest="100"
-                                  HeightRequest="100"
-                                  HorizontalOptions="Center"
-                                  VerticalOptions="Center">
-                                <Border BackgroundColor="#FACC15"
-                                        StrokeShape="Ellipse">
-                                    <Label x:Name="labelEmoji3"
-                                           Text="😊"
-                                           FontSize="52"
-                                           Margin="0,0,0,8"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-                                <Border x:Name="overlayEmoji3"
-                                        BackgroundColor="#80000000"
-                                        StrokeThickness="0"
-                                        StrokeShape="Ellipse">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEmojiTapped"
-                                                              CommandParameter="3" />
-                                    </Border.GestureRecognizers>
-                                </Border>
-                            </Grid>
-
-                            <!-- COL 4 -->
-                            <Grid x:Name="gridEmoji4"
-                                  Grid.Column="4"
-                                  WidthRequest="100"
-                                  HeightRequest="100"
-                                  HorizontalOptions="Center"
-                                  VerticalOptions="Center">
-                                <Border BackgroundColor="#FACC15"
-                                        StrokeShape="Ellipse">
-                                    <Label x:Name="labelEmoji4"
-                                           Text="😁"
-                                           FontSize="52"
-                                           Margin="0,0,0,8"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Border>
-                                <Border x:Name="overlayEmoji4"
-                                        BackgroundColor="#80000000"
-                                        StrokeThickness="0"
-                                        StrokeShape="Ellipse">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEmojiTapped"
-                                                              CommandParameter="4" />
-                                    </Border.GestureRecognizers>
-                                </Border>
-                            </Grid>
-                        </Grid>
-                        
-                        <Label Grid.Row="8"
-                               Margin="0,6,0,0"
-                               Text="E como você avalia a nossa instituição?"
-                               TextColor="#6B7280" />
-
-                        <toolkit:RatingView Grid.Row="9"
-                                            x:Name="Stars"
-                                            MaximumRating="5"
-                                            Rating="{Binding InstitutionScore}"
-                                            ShapeDiameter="60"
-                                            FillColor="#FACC15"
-                                            BackgroundColor="Transparent"
-                                            HorizontalOptions="Center" />
-
-                        <!-- Comentário (altura responsiva) -->
-                        <VerticalStackLayout Grid.Row="10"
-                                             Margin="0,40,0,0"
-                                             Spacing="8">
-                            <Label Text="Quer deixar algum comentário?"
-                                   TextColor="#6B7280" />
-                            <Border Stroke="#C5C3C3"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 12"
-                                    BackgroundColor="White"
-                                    Padding="8,6">
-                                <Editor x:Name="CommentEditor"
-                                        Placeholder="Escreva aqui..."
-                                        MaxLength="300"
-                                        AutoSize="Disabled"
-                                        Text="{Binding Comment}"
-                                        MinimumHeightRequest="300" />
-                            </Border>
-                        </VerticalStackLayout>
-
-                        <!-- VSM EXTERNO: somente alvos no mesmo scope -->
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="WidthStates">
-                                <!-- Phone / estreito -->
-                                <VisualState x:Name="BasePhone">
-                                    <VisualState.Setters>
-                                        <Setter TargetName="EmojiLayout"
-                                                Property="GridItemsLayout.Span"
-                                                Value="5" />
-                                        <Setter TargetName="Stars"
-                                                Property="toolkit:RatingView.ShapeDiameter"
-                                                Value="46" />
-                                        <Setter TargetName="CommentEditor"
-                                                Property="Editor.MinimumHeightRequest"
-                                                Value="180" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <!-- Tablet (>=900px) -->
-                                <VisualState x:Name="Tablet900">
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="900" />
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter TargetName="EmojiLayout"
-                                                Property="GridItemsLayout.Span"
-                                                Value="7" />
-                                        <Setter TargetName="Stars"
-                                                Property="toolkit:RatingView.ShapeDiameter"
-                                                Value="58" />
-                                        <Setter TargetName="CommentEditor"
-                                                Property="Editor.MinimumHeightRequest"
-                                                Value="220" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <!-- Desktop (>=1200px) -->
-                                <VisualState x:Name="Desktop1200">
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="1200" />
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter TargetName="EmojiLayout"
-                                                Property="GridItemsLayout.Span"
-                                                Value="9" />
-                                        <Setter TargetName="Stars"
-                                                Property="toolkit:RatingView.ShapeDiameter"
-                                                Value="66" />
-                                        <Setter TargetName="CommentEditor"
-                                                Property="Editor.MinimumHeightRequest"
-                                                Value="260" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-
+                                           VerticalOptions="Center"
+                                           Opacity="0" />
                     </Grid>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ConfirmCommand}" />
+                    </Border.GestureRecognizers>
                 </Border>
             </Grid>
-        </ScrollView>
-
-        <!-- Botão fixo no rodapé -->
-        <Grid Grid.Row="2"
-              x:Name="ButtonHost"
-              Padding="24,12"
-              HorizontalOptions="Fill">
-            <Border x:Name="ConfirmButton"
-                    Background="{StaticResource PrimaryGreenGradient}"
-                    StrokeThickness="0"
-                    StrokeShape="RoundRectangle 24"
-                    HeightRequest="54"
-                    HorizontalOptions="Fill"
-                    Padding="0">
-                <Border.Shadow>
-                    <Shadow Brush="#40000000"
-                            Offset="0,8"
-                            Radius="12" />
-                </Border.Shadow>
-
-                <Grid x:Name="BtnContent"
-                      HorizontalOptions="Fill">
-                    <Label x:Name="BtnText"
-                           Text="Confirmar"
-                           TextColor="White"
-                           FontAttributes="Bold"
-                           FontSize="16"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                    <ActivityIndicator x:Name="BtnSpinner"
-                                       Color="White"
-                                       IsVisible="{Binding IsSubmitting}"
-                                       IsRunning="{Binding IsSubmitting}"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       Opacity="0" />
-                </Grid>
-
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ConfirmCommand}" />
-                </Border.GestureRecognizers>
-            </Border>
         </Grid>
-
-    </Grid>
+    </ScrollView>
 </ContentPage>

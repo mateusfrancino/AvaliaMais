@@ -1,5 +1,7 @@
 using Avalia_.ViewModels;
 using Microsoft.Maui.Controls.Shapes;
+using System.Security.Principal;
+
 #if ANDROID
 using Android.Views;
 using Microsoft.Maui.Platform;
@@ -19,6 +21,11 @@ public partial class FeedbackPage : ContentPage
 
     private List<(Grid grid, Border overlay, Label label)> _emojis = default!;
 
+    private int _tapCount = 0;
+    private DateTime _firstTapTime = DateTime.MinValue;
+    private static readonly TimeSpan TapWindow = TimeSpan.FromSeconds(1.5); 
+    private const int TapsToUnlock = 3;
+
     public FeedbackPage(FeedbackViewModel vm)
     {
         InitializeComponent();
@@ -35,6 +42,32 @@ public partial class FeedbackPage : ContentPage
 
         // estado inicial: todos pequenos e "desabilitados"
         ResetAll();
+    }
+
+    private async void AdminTitle_Tapped(object sender, TappedEventArgs e)
+    {
+        var now = DateTime.UtcNow;
+
+        if (now - _firstTapTime > TapWindow)
+        {
+            _tapCount = 0;
+            _firstTapTime = now;
+        }
+
+        _tapCount++;
+
+        try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
+
+        if (_tapCount >= TapsToUnlock)
+        {
+            _tapCount = 0;
+
+            bool ok = await DisplayAlert("Acesso restrito", "Abrir área administrativa?", "Sim", "Não");
+            if (!ok) return;
+
+            // Abre LoginPage (normal). Se quiser modal, veja a nota logo abaixo.
+            await Shell.Current.GoToAsync(nameof(LoginPage));
+        }
     }
 
     protected override void OnAppearing()

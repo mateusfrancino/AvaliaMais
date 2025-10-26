@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalia_.Views.LoginPage"
+             Shell.PresentationMode="ModalAnimated"
+             BackgroundColor="#F3F4F6">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24"
+                             Padding="40,100"
+                             VerticalOptions="Center">
+
+            <!-- Título -->
+            <Label Text="Avalia+ Admin"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#111827"
+                   HorizontalOptions="Center" />
+
+            <!-- Campo usuário -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Usuário"
+                       FontSize="14"
+                       TextColor="#6B7280" />
+
+                <Border StrokeThickness="1"
+                        Stroke="#D1D5DB"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 8">
+                    <Entry x:Name="txtUser"
+                           Placeholder="Digite seu usuário"
+                           FontSize="16"
+                           Keyboard="Email"
+                           TextColor="#111827"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="44"
+                           Margin="6,0"
+                           VerticalOptions="Center" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Campo senha -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Senha"
+                       FontSize="14"
+                       TextColor="#6B7280" />
+
+                <Border StrokeThickness="1"
+                        Stroke="#D1D5DB"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 8">
+                    <Entry x:Name="txtPassword"
+                           Placeholder="Digite sua senha"
+                           FontSize="16"
+                           IsPassword="True"
+                           TextColor="#111827"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="44"
+                           Margin="6,0"
+                           VerticalOptions="Center" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Botão de login -->
+            <Button Text="Entrar"
+                    BackgroundColor="#2563EB"
+                    TextColor="White"
+                    FontSize="18"
+                    CornerRadius="8"
+                    HeightRequest="50"
+                    Clicked="OnLoginClicked"
+                    Margin="0,10,0,0" />
+
+            <!-- Mensagem de erro -->
+            <Label x:Name="lblErro"
+                   Text=""
+                   TextColor="#DC2626"
+                   FontSize="14"
+                   IsVisible="False"
+                   HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
