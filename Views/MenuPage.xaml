@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalia_.Views.MenuPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#F3F4F6">
+    <ScrollView>
+        <VerticalStackLayout Spacing="18"
+                             Padding="24,36"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Fill"
+                             WidthRequest="460">
+
+            <!-- Botão Voltar -->
+            <Button Text="Voltar"
+                    HorizontalOptions="Start"
+                    Clicked="OnVoltarClicked"
+                    BackgroundColor="#0786D6"
+                    TextColor="#111827"
+                    FontSize="Body"
+                    Padding="20,0"
+                    Margin="0,0,0,0" />
+
+            <!-- Card: Admin -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    HeightRequest="120"
+                    WidthRequest="420">
+                <Grid Padding="18">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAdminTapped" />
+                    </Grid.GestureRecognizers>
+
+                    <HorizontalStackLayout Spacing="16"
+                                           VerticalOptions="Center">
+                        <Label Text="🛠️"
+                               FontSize="40"
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout>
+                            <Label Text="Área Administrativa"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827" />
+                            <Label Text="Acessar painel AdminPage"
+                                   FontSize="14"
+                                   TextColor="#6B7280" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Card: Cadastro de Unidades -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    HeightRequest="120"
+                    WidthRequest="420">
+                <Grid Padding="18">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnUnidadesTapped" />
+                    </Grid.GestureRecognizers>
+
+                    <HorizontalStackLayout Spacing="16"
+                                           VerticalOptions="Center">
+                        <Label Text="🏢"
+                               FontSize="40"
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout>
+                            <Label Text="Cadastro de Unidades"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827" />
+                            <Label Text="Criar/setar unidade utilizada"
+                                   FontSize="14"
+                                   TextColor="#6B7280" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Card: Cadastro de Funcionário -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 12"
+                    HeightRequest="120"
+                    WidthRequest="420">
+                <Grid Padding="18">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFuncionarioTapped" />
+                    </Grid.GestureRecognizers>
+
+                    <HorizontalStackLayout Spacing="16"
+                                           VerticalOptions="Center">
+                        <Label Text="👤"
+                               FontSize="40"
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout>
+                            <Label Text="Cadastro de Funcionário"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827" />
+                            <Label Text="Foto, Nome e Unidade"
+                                   FontSize="14"
+                                   TextColor="#6B7280" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

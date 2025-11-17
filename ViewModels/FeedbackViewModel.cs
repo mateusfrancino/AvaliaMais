@@ -1,72 +1,131 @@
-﻿using Avalia_.Models;
+﻿using Avalia_.Services;
 using Avalia_.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Avalia_.ViewModels
 {
+    public class Attendant
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string? PhotoUrl { get; set; }
+    }
+
     public partial class FeedbackViewModel : ObservableObject
     {
+        private readonly SupabaseService _supa;
+
+        // dispara reset visual na View (emoji/Editor etc.)
+        public event Action? ResetUiRequested;
+
+        private int UnidadeAtualId => Preferences.Get(CadastroUnidadesViewModel.PrefUnidadeIdKey, 0);
+
         public ObservableCollection<Attendant> Attendants { get; } = new();
 
-
         [ObservableProperty] private Attendant? selectedAttendant;
-        [ObservableProperty] private double attendantScore = 0;   
-        [ObservableProperty] private double institutionScore = 0;
+        [ObservableProperty] private double attendantScore = 0;     // 1..5 (emoji)
+        [ObservableProperty] private double institutionScore = 0;   // 1..5
         [ObservableProperty] private string? comment;
         [ObservableProperty] private bool isSubmitting;
 
-        public FeedbackViewModel()
+        public FeedbackViewModel(SupabaseService supa)
         {
-            // Mock inicial — depois troque pelo Supabase
-            Attendants.Add(new Attendant { Name = "Letícia", PhotoUrl = "https://i.pravatar.cc/150?img=36" });
-            Attendants.Add(new Attendant { Name = "Paulo", PhotoUrl = "https://i.pravatar.cc/150?img=8" });
-            Attendants.Add(new Attendant { Name = "Marina", PhotoUrl = "https://i.pravatar.cc/150?img=5" });
-
-            SelectedAttendant = Attendants.FirstOrDefault();
-
-            // opcional: valor inicial “sem seleção”
-            AttendantScore = 0;
-
-            WeakReferenceMessenger.Default.Register<ClearFeedbackMessage>(this, (_, __) => Reset());
+            _supa = supa;
         }
 
-        // NOVO: comando para quando tocar/clicar num emoji (CollectionView -> CommandParameter=Value)
+        // Carregar funcionários da unidade fixa
         [RelayCommand]
-        private void SelectAttendantEmoji(int value)
+        public async Task LoadAsync()
         {
-            AttendantScore = value; // vai de 1..5
+            try
+            {
+                IsSubmitting = true; // usa o spinner do botão como “busy”
+                await _supa.InitializeAsync();
+
+                Attendants.Clear();
+
+                var funcionarios = await _supa.GetFuncionariosAsync(UnidadeAtualId);
+                foreach (var f in funcionarios)
+                {
+                    Attendants.Add(new Attendant
+                    {
+                        Id = f.Id,
+                        Name = f.Name,
+                        PhotoUrl = f.Photo
+                    });
+                }
+
+                // NÃO auto-seleciona mais ninguém:
+                SelectedAttendant = null;
+                AttendantScore = 0;
+                InstitutionScore = 0;
+                Comment = string.Empty;
+
+                // pede pra view resetar os visuais (emojis, editor etc.)
+                ResetUiRequested?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Erro", $"Falha ao carregar funcionários: {ex.Message}", "OK");
+            }
+            finally
+            {
+                IsSubmitting = false;
+            }
         }
 
-        void Reset()
-        {
-            AttendantScore = 0;
-            InstitutionScore = 0;
-            Comment = string.Empty;
-            SelectedAttendant = null;
-        }
+        [RelayCommand]
+        private void SelectAttendantEmoji(int value) => AttendantScore = value;
 
         [RelayCommand]
         private async Task ConfirmAsync()
         {
             if (IsSubmitting) return;
-            IsSubmitting = true;
+
+            // validações simples
+            if (AttendantScore < 1 || AttendantScore > 5)
+            {
+                await Shell.Current.DisplayAlert("Atenção", "Escolha um emoji (1 a 5).", "OK");
+                return;
+            }
+            if (InstitutionScore < 1 || InstitutionScore > 5)
+            {
+                await Shell.Current.DisplayAlert("Atenção", "Dê uma nota para a instituição (1 a 5).", "OK");
+                return;
+            }
+            // Se quiser obrigar atendente, descomente:
+            // if (SelectedAttendant is null) { await Shell.Current.DisplayAlert("Atenção","Selecione quem lhe atendeu.","OK"); return; }
+
             try
             {
-                // TODO: salvar / enviar
-                await Task.Delay(1500);
+                IsSubmitting = true;
 
-                await Shell.Current.GoToAsync(nameof(ObrigadoPage)); // ou Navigation.PushAsync(new ObrigadoPage())
+                var criado = await _supa.AddAvaliacaoAsync(
+                    idUnidade: UnidadeAtualId,
+                    idFuncionario: SelectedAttendant?.Id,
+                    emojiScore: (short)AttendantScore,
+                    nota: (short)InstitutionScore,
+                    comentario: string.IsNullOrWhiteSpace(Comment) ? null : Comment,
+                    criadoEmUtc: DateTime.UtcNow
+                );
 
-
-                // Reseta campos
+                // limpa campos para próximo uso (inclusive atendente)
+                SelectedAttendant = null;
                 AttendantScore = 0;
                 InstitutionScore = 0;
                 Comment = string.Empty;
+
+                // reseta visuais (emojis/Editor na View)
+                ResetUiRequested?.Invoke();
+
+                // navega para “Obrigado”
+                await Shell.Current.GoToAsync(nameof(ObrigadoPage));
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Erro", $"Falha ao enviar avaliação: {ex.Message}", "OK");
             }
             finally
             {

@@ -16,9 +16,12 @@ namespace Avalia_
                 Route = "Feedback"
             });
 
-            // Rotas "simples" (não-topo)
+            // Rotas (não aparecem no topo/Flyout por padrão)
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-            Routing.RegisterRoute(nameof(AdminPage), typeof(AdminPage));   // <-- só registrar
+            Routing.RegisterRoute(nameof(MenuPage), typeof(MenuPage));
+            Routing.RegisterRoute(nameof(AdminPage), typeof(AdminPage)); // apenas rota
+            Routing.RegisterRoute(nameof(CadastroUnidadesPage), typeof(CadastroUnidadesPage));
+            Routing.RegisterRoute(nameof(CadastroFuncionarioPage), typeof(CadastroFuncionarioPage));
             Routing.RegisterRoute(nameof(ObrigadoPage), typeof(ObrigadoPage));
         }
     }

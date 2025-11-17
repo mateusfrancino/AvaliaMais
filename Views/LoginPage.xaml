@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Avalia_.Views.LoginPage"
+             Shell.NavBarIsVisible="True"
              Shell.PresentationMode="ModalAnimated"
              BackgroundColor="#F3F4F6">
 
@@ -9,6 +10,16 @@
         <VerticalStackLayout Spacing="24"
                              Padding="40,100"
                              VerticalOptions="Center">
+
+            <!-- Botão Voltar -->
+            <Button Text="Voltar"
+                    HorizontalOptions="Start"
+                    Clicked="OnVoltarClicked"
+                    BackgroundColor="#0786D6"
+                    TextColor="#111827"
+                    FontSize="Body"
+                    Padding="20,0"
+                    Margin="0,0,0,0" />
 
             <!-- Título -->
             <Label Text="Avalia+ Admin"

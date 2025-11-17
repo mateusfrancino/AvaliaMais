@@ -1,0 +1,208 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Avalia_.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Avalia_.Data.Models"
+             x:Class="Avalia_.Views.CadastroFuncionarioPage"
+             x:Name="CadastroFuncionarioPageRef"
+             x:DataType="vm:CadastroFuncionarioViewModel"
+             Title="Cadastro de Funcionário"
+             BackgroundColor="#F3F4F6">
+
+    <ContentPage.Resources>
+        <ResourceDictionary xmlns:conv="clr-namespace:Avalia_.Helpers.Converters">
+            <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="18"
+                             Padding="24,36">
+
+            <!-- Botão Voltar -->
+            <Button Text="Voltar"
+                    HorizontalOptions="Start"
+                    Clicked="OnVoltarClicked"
+                    BackgroundColor="#0786D6"
+                    TextColor="#111827"
+                    FontSize="Body"
+                    Padding="20,0"
+                    Margin="0,0,0,0" />
+
+            <Label Text="Novo Funcionário"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#111827" />
+
+            <!-- Foto -->
+            <VerticalStackLayout Spacing="8"
+                                 HorizontalOptions="Center">
+                <Border StrokeThickness="0"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 16"
+                        Padding="16"
+                        WidthRequest="220">
+                    <VerticalStackLayout Spacing="12"
+                                         HorizontalOptions="Center">
+                        <Image WidthRequest="160"
+                               HeightRequest="160"
+                               Aspect="AspectFill"
+                               BackgroundColor="#E5E7EB"
+                               Source="{Binding FotoPreview}">
+                            <Image.Clip>
+                                <EllipseGeometry Center="80,80"
+                                                 RadiusX="80"
+                                                 RadiusY="80" />
+                            </Image.Clip>
+                        </Image>
+
+                        <Button Text="Galeria"
+                                Command="{Binding PickFotoCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Nome -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Nome"
+                       FontSize="14"
+                       TextColor="#6B7280" />
+                <Border StrokeThickness="1"
+                        Stroke="#D1D5DB"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 8">
+                    <Entry Placeholder="Nome completo"
+                           Text="{Binding Nome}"
+                           FontSize="16"
+                           TextColor="#111827"
+                           PlaceholderColor="#9CA3AF"
+                           HeightRequest="44"
+                           Margin="6,0"
+                           ReturnType="Done">
+                        <Entry.Behaviors>
+                            <toolkit:EventToCommandBehavior EventName="Completed"
+                                                            Command="{Binding SalvarCommand}" />
+                        </Entry.Behaviors>
+                    </Entry>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Unidade -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Unidade"
+                       FontSize="14"
+                       TextColor="#6B7280" />
+                <Border StrokeThickness="1"
+                        Stroke="#D1D5DB"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 8">
+                    <Picker Title="Selecione a unidade"
+                            ItemsSource="{Binding Unidades}"
+                            ItemDisplayBinding="{Binding Nome}"
+                            SelectedItem="{Binding UnidadeSelecionada}"
+                            FontSize="16"
+                            HeightRequest="44"
+                            Margin="6,0" />
+                </Border>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,Auto"
+                  VerticalOptions="Center">
+                <Button Grid.Column="0"
+                        Text="Salvar"
+                        Command="{Binding SalvarCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                        BackgroundColor="#2563EB"
+                        TextColor="White"
+                        FontSize="18"
+                        CornerRadius="8"
+                        HeightRequest="50" />
+                <ActivityIndicator Grid.Column="1"
+                                   IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   VerticalOptions="Center"
+                                   Margin="12,0,0,0" />
+            </Grid>
+
+            <Label Text="{Binding StatusMessage}"
+                   TextColor="#059669"
+                   FontSize="14"
+                   IsVisible="{Binding ShowStatus}" />
+
+            <!-- LISTA DE FUNCIONÁRIOS -->
+            <Label Text="Funcionários cadastrados"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="#111827"
+                   Margin="0,24,0,8" />
+
+            <CollectionView ItemsSource="{Binding Funcionarios}"
+                            HeightRequest="320">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Funcionario">
+                        <Border StrokeThickness="0"
+                                BackgroundColor="White"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="12"
+                                Margin="0,0,0,8">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                                  ColumnSpacing="12"
+                                  VerticalOptions="Center">
+                                <!-- Avatar -->
+                                <Border WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        BackgroundColor="#E5E7EB"
+                                        StrokeShape="RoundRectangle 20"
+                                        VerticalOptions="Center">
+                                    <Image Source="{Binding Photo}"
+                                           Aspect="AspectFill">
+                                        <Image.Clip>
+                                            <EllipseGeometry Center="20,20"
+                                                             RadiusX="20"
+                                                             RadiusY="20" />
+                                        </Image.Clip>
+                                    </Image>
+                                </Border>
+
+                                <!-- Nome -->
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="2"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="#111827" />
+                                    <Label Text="{Binding IdUnidade}"
+                                           FontSize="12"
+                                           TextColor="#6B7280" />
+                                </VerticalStackLayout>
+
+                                <!-- Botão Editar -->
+                                <Button Grid.Column="2"
+                                        Text="Editar"
+                                        FontSize="12"
+                                        Padding="10,4"
+                                        BackgroundColor="#3B82F6"
+                                        TextColor="White"
+                                        Command="{Binding BindingContext.EditarFuncionarioCommand, Source={x:Reference CadastroFuncionarioPageRef}}"
+                                        CommandParameter="{Binding .}" />
+
+                                <!-- Botão Excluir -->
+                                <Button Grid.Column="3"
+                                        Text="Excluir"
+                                        FontSize="12"
+                                        Padding="10,4"
+                                        BackgroundColor="#EF4444"
+                                        TextColor="White"
+                                        Command="{Binding BindingContext.ExcluirFuncionarioCommand, Source={x:Reference CadastroFuncionarioPageRef}}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -96,7 +96,6 @@
     </ContentPage.Resources>
 
     <ScrollView>
-
         <Grid RowDefinitions="Auto,Auto,Auto">
 
             <!-- Título -->
@@ -111,7 +110,6 @@
                 </Label.GestureRecognizers>
             </Label>
 
-
             <!-- CONTEÚDO ROLÁVEL -->
             <ScrollView Grid.Row="1">
                 <Grid Padding="16"
@@ -119,7 +117,7 @@
                       VerticalOptions="Fill">
                     <Border Style="{StaticResource Card}"
                             HorizontalOptions="Fill"
-                            Padding="20"
+                            Padding="10,0,10,0"
                             MaximumWidthRequest="980">
                         <Grid x:Name="ContentHost"
                               RowSpacing="14"
@@ -128,23 +126,38 @@
                             <!-- Quem te atendeu -->
                             <Grid Grid.Row="2"
                                   ColumnDefinitions="Auto,12,*"
-                                  VerticalOptions="Center">
+                                  VerticalOptions="Start">
 
                                 <Image WidthRequest="120"
                                        HeightRequest="120"
                                        Aspect="AspectFill"
                                        Source="{Binding SelectedAttendant.PhotoUrl}">
                                     <Image.Clip>
-                                        <EllipseGeometry Center="55,55"
-                                                         RadiusX="55"
-                                                         RadiusY="55" />
+                                        <!-- com 120x120, centro 60/raio 60 dá círculo perfeito -->
+                                        <EllipseGeometry Center="60,60"
+                                                         RadiusX="60"
+                                                         RadiusY="60" />
                                     </Image.Clip>
+                                    <!-- opcional: placeholder quando sem seleção/foto -->
+                                    <Image.Triggers>
+                                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding SelectedAttendant}"
+                                                     Value="{x:Null}">
+                                            <Setter Property="Source"
+                                                    Value="avatar_placeholder.png" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding SelectedAttendant.PhotoUrl}"
+                                                     Value="">
+                                            <Setter Property="Source"
+                                                    Value="avatar_placeholder.png" />
+                                        </DataTrigger>
+                                    </Image.Triggers>
                                 </Image>
 
                                 <VerticalStackLayout Grid.Column="2"
                                                      Spacing="4"
                                                      VerticalOptions="Center">
-
                                     <Label Text="Quem te atendeu?"
                                            FontSize="14"
                                            TextColor="#6B7280"
@@ -178,7 +191,6 @@
                                     </Border>
                                 </VerticalStackLayout>
                             </Grid>
-
                             <!-- Avaliação do atendente -->
                             <Label Grid.Row="4"
                                    Text="{Binding SelectedAttendant.Name, StringFormat='Como você avalia o atendimento de {0}?'}"
@@ -188,42 +200,34 @@
                                   Padding="0"
                                   ColumnSpacing="2"
                                   RowSpacing="0">
-
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
-                                    <!-- Coluna 1 -->
                                     <ColumnDefinition Width="*" />
-                                    <!-- Coluna 2 -->
                                     <ColumnDefinition Width="*" />
-                                    <!-- Coluna 3 -->
                                     <ColumnDefinition Width="*" />
-                                    <!-- Coluna 4 -->
                                     <ColumnDefinition Width="*" />
-                                    <!-- Coluna 5 -->
                                 </Grid.ColumnDefinitions>
-
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="120" />
+                                    <RowDefinition Height="100" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <!-- COL 0 -->
+                                <!-- Emojis -->
                                 <Grid x:Name="gridEmoji0"
                                       Grid.Column="0"
-                                      WidthRequest="80"
-                                      HeightRequest="80"
+                                      WidthRequest="78"
+                                      HeightRequest="78"
                                       HorizontalOptions="Center"
                                       VerticalOptions="Center">
-                                    <Border BackgroundColor="#FACC15"
-                                            StrokeShape="Ellipse">
-                                        <Label x:Name="labelEmoji0"
-                                               Text="😟"
-                                               FontSize="52"
-                                               Margin="0,0,0,8"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Border>
+                                    <!-- imagem emoji0 -->
+                                    <Image x:Name="imageEmoji0" Source="emoji0.png"
+                                           WidthRequest="78"
+                                           HeightRequest="78"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
                                     <Border x:Name="overlayEmoji0"
-                                            BackgroundColor="#80000000"
                                             StrokeThickness="0"
                                             StrokeShape="Ellipse">
                                         <Border.GestureRecognizers>
@@ -233,24 +237,21 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- COL 1 -->
                                 <Grid x:Name="gridEmoji1"
                                       Grid.Column="1"
-                                      WidthRequest="80"
-                                      HeightRequest="80"
+                                      WidthRequest="78"
+                                      HeightRequest="78"
                                       HorizontalOptions="Center"
                                       VerticalOptions="Center">
-                                    <Border BackgroundColor="#FACC15"
-                                            StrokeShape="Ellipse">
-                                        <Label x:Name="labelEmoji1"
-                                               Text="😐"
-                                               FontSize="52"
-                                               Margin="0,0,0,8"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Border>
+                                    <!-- imagem emoji1 -->
+                                    <Image x:Name="imageEmoji1" Source="emoji1.png"
+                                           WidthRequest="78"
+                                           HeightRequest="78"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
                                     <Border x:Name="overlayEmoji1"
-                                            BackgroundColor="#80000000"
                                             StrokeThickness="0"
                                             StrokeShape="Ellipse">
                                         <Border.GestureRecognizers>
@@ -260,24 +261,21 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- COL 2 -->
                                 <Grid x:Name="gridEmoji2"
                                       Grid.Column="2"
-                                      WidthRequest="80"
-                                      HeightRequest="80"
+                                      WidthRequest="78"
+                                      HeightRequest="78"
                                       HorizontalOptions="Center"
                                       VerticalOptions="Center">
-                                    <Border BackgroundColor="#FACC15"
-                                            StrokeShape="Ellipse">
-                                        <Label x:Name="labelEmoji2"
-                                               Text="🙂"
-                                               FontSize="52"
-                                               Margin="0,0,0,8"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Border>
+                                    <!-- imagem emoji2 -->
+                                    <Image x:Name="imageEmoji2" Source="emoji2.png"
+                                           WidthRequest="78"
+                                           HeightRequest="78"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
                                     <Border x:Name="overlayEmoji2"
-                                            BackgroundColor="#80000000"
                                             StrokeThickness="0"
                                             StrokeShape="Ellipse">
                                         <Border.GestureRecognizers>
@@ -287,24 +285,21 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- COL 3 -->
                                 <Grid x:Name="gridEmoji3"
                                       Grid.Column="3"
-                                      WidthRequest="80"
-                                      HeightRequest="80"
+                                      WidthRequest="78"
+                                      HeightRequest="78"
                                       HorizontalOptions="Center"
                                       VerticalOptions="Center">
-                                    <Border BackgroundColor="#FACC15"
-                                            StrokeShape="Ellipse">
-                                        <Label x:Name="labelEmoji3"
-                                               Text="😊"
-                                               FontSize="52"
-                                               Margin="0,0,0,8"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Border>
+                                    <!-- imagem emoji3 -->
+                                    <Image x:Name="imageEmoji3" Source="emoji3.png"
+                                           WidthRequest="78"
+                                           HeightRequest="78"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
                                     <Border x:Name="overlayEmoji3"
-                                            BackgroundColor="#80000000"
                                             StrokeThickness="0"
                                             StrokeShape="Ellipse">
                                         <Border.GestureRecognizers>
@@ -314,24 +309,21 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- COL 4 -->
                                 <Grid x:Name="gridEmoji4"
                                       Grid.Column="4"
-                                      WidthRequest="80"
-                                      HeightRequest="80"
+                                      WidthRequest="78"
+                                      HeightRequest="78"
                                       HorizontalOptions="Center"
                                       VerticalOptions="Center">
-                                    <Border BackgroundColor="#FACC15"
-                                            StrokeShape="Ellipse">
-                                        <Label x:Name="labelEmoji4"
-                                               Text="😁"
-                                               FontSize="52"
-                                               Margin="0,0,0,8"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
-                                    </Border>
+                                    <!-- imagem emoji4 -->
+                                    <Image x:Name="imageEmoji4" Source="emoji4.png"
+                                           WidthRequest="78"
+                                           HeightRequest="78"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
                                     <Border x:Name="overlayEmoji4"
-                                            BackgroundColor="#80000000"
                                             StrokeThickness="0"
                                             StrokeShape="Ellipse">
                                         <Border.GestureRecognizers>
@@ -340,24 +332,66 @@
                                         </Border.GestureRecognizers>
                                     </Border>
                                 </Grid>
+
+                                <!-- Legenda -->
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="Ruim"
+                                       FontSize="14"
+                                       TextColor="#6B7280"
+                                       Margin="0,4,0,0"
+                                       HorizontalTextAlignment="Center" />
+
+                                <Label Grid.Row="1"
+                                       Grid.Column="1"
+                                       Text="Regular"
+                                       FontSize="14"
+                                       TextColor="#6B7280"
+                                       Margin="0,4,0,0"
+                                       HorizontalTextAlignment="Center" />
+
+                                <Label Grid.Row="1"
+                                       Grid.Column="2"
+                                       Text="Bom"
+                                       FontSize="14"
+                                       TextColor="#6B7280"
+                                       Margin="0,4,0,0"
+                                       HorizontalTextAlignment="Center" />
+
+                                <Label Grid.Row="1"
+                                       Grid.Column="3"
+                                       Text="Ótimo"
+                                       FontSize="14"
+                                       TextColor="#6B7280"
+                                       Margin="0,4,0,0"
+                                       HorizontalTextAlignment="Center" />
+
+                                <Label Grid.Row="1"
+                                       Grid.Column="4"
+                                       Text="Excelente"
+                                       FontSize="14"
+                                       TextColor="#6B7280"
+                                       Margin="0,4,0,0"
+                                       HorizontalTextAlignment="Center" />
                             </Grid>
+
+
 
                             <Label Grid.Row="8"
                                    Text="E como você avalia a nossa instituição?"
                                    TextColor="#6B7280" />
 
                             <toolkit:RatingView Grid.Row="9"
-                                                x:Name="Stars"
                                                 MaximumRating="5"
-                                                Rating="{Binding InstitutionScore}"
+                                                Rating="{Binding InstitutionScore, Mode=TwoWay}"
                                                 ShapeDiameter="55"
                                                 FillColor="#FACC15"
-                                                BackgroundColor="Transparent"
+                                                IsReadOnly="False"
                                                 HorizontalOptions="Center" />
 
-                            <!-- Comentário (altura responsiva) -->
+                            <!-- Comentário -->
                             <VerticalStackLayout Grid.Row="10"
-                                                 Margin="0,40,0,0"
+                                                 Margin="0,25,0,0"
                                                  Spacing="8">
                                 <Label Text="Quer deixar algum comentário?"
                                        TextColor="#6B7280" />
@@ -368,10 +402,12 @@
                                         Padding="8,6">
                                     <Editor x:Name="CommentEditor"
                                             Placeholder="Escreva aqui..."
-                                            MaxLength="300"
+                                            MaxLength="250"
                                             AutoSize="Disabled"
                                             Text="{Binding Comment}"
-                                            MinimumHeightRequest="300" />
+                                            HeightRequest="180"
+                                            MinimumHeightRequest="180"
+                                            />
                                 </Border>
                             </VerticalStackLayout>
                         </Grid>
@@ -382,7 +418,7 @@
             <!-- Botão fixo no rodapé -->
             <Grid Grid.Row="2"
                   x:Name="ButtonHost"
-                  Padding="24,12"
+                  Padding="20,0,20,0"
                   HorizontalOptions="Fill">
                 <Border x:Name="ConfirmButton"
                         Background="{StaticResource PrimaryGreenGradient}"
@@ -406,13 +442,14 @@
                                FontSize="16"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
+
+                        <!-- spinner no centro enquanto envia, sem animação/morph -->
                         <ActivityIndicator x:Name="BtnSpinner"
                                            Color="White"
                                            IsVisible="{Binding IsSubmitting}"
                                            IsRunning="{Binding IsSubmitting}"
                                            HorizontalOptions="Center"
-                                           VerticalOptions="Center"
-                                           Opacity="0" />
+                                           VerticalOptions="Center" />
                     </Grid>
 
                     <Border.GestureRecognizers>

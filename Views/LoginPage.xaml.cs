@@ -14,12 +14,20 @@ public partial class LoginPage : ContentPage
 
         if (user == "admin" && pass == "1234")
         {
-            await Shell.Current.GoToAsync(nameof(AdminPage));
+            await Shell.Current.GoToAsync(nameof(MenuPage));
         }
         else
         {
             lblErro.Text = "Usuário ou senha inválidos.";
             lblErro.IsVisible = true;
         }
+    }
+
+    private async void OnVoltarClicked(object sender, EventArgs e)
+    {
+        // Volta para a página anterior na pilha da Shell
+        await Shell.Current.GoToAsync("..");
+        // Se quiser forçar para uma rota específica:
+        // await Shell.Current.GoToAsync(nameof(MenuPage));
     }
 }
